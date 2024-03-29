@@ -144,7 +144,7 @@ app.get('/todos/', async (request, response) => {
     case hasdueDateProperty(request.query):
       const requestDate = new Date(date)
       const result4 = isValid(new Date(date))
-      console.log(result4)
+
       if (result4) {
         let formatDate = format(
           new Date(
@@ -154,7 +154,7 @@ app.get('/todos/', async (request, response) => {
           ),
           'yyyy-MM-dd',
         )
-        console.log(formatDate)
+
         getToDoQuery = `
          SELECT
           *
@@ -257,7 +257,6 @@ app.post('/todos/', async (request, response) => {
   const requestBody = request.body
   const {id, todo, category, status, priority, dueDate} = requestBody
 
-  const date = dueDate
   const priorityArr = ['HIGH', 'MEDIUM', 'LOW']
   const statusArr = ['TO DO', 'IN PROGRESS', 'DONE']
   const categoryArr = ['WORK', 'HOME', 'LEARNING']
@@ -272,6 +271,7 @@ app.post('/todos/', async (request, response) => {
         response.status(400)
         response.send('Invalid Todo Status')
       }
+
     case requestBody.priority !== undefined:
       const priorityPostValid = priorityArr.includes(priority)
       if (priorityPostValid === false) {
@@ -279,6 +279,7 @@ app.post('/todos/', async (request, response) => {
         response.status(400)
         response.send('Invalid Todo Priority')
       }
+
     case requestBody.category !== undefined:
       const categoryPostValid = categoryArr.includes(category)
       if (categoryPostValid === false) {
@@ -286,6 +287,7 @@ app.post('/todos/', async (request, response) => {
         response.status(400)
         response.send('Invalid Todo Category')
       }
+
     case requestBody.dueDate !== undefined:
       const dueDatePostValid = isValid(new Date(dueDate))
       if (dueDatePostValid === false) {
@@ -293,7 +295,6 @@ app.post('/todos/', async (request, response) => {
         response.status(400)
         response.send('Invalid Due Date')
       }
-      break
   }
   const postResult = validQuery.includes('false')
   if (postResult === false) {
@@ -306,7 +307,7 @@ app.post('/todos/', async (request, response) => {
             '${category}',
             '${status}',
             '${priority}',
-            '${date}');`
+            '${dueDate}');`
     const dbResponse = await db.run(getToDoQuery)
     response.send('Todo Successfully Added')
   }
